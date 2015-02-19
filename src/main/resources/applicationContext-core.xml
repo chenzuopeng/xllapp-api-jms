@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+		
+	<context:component-scan base-package="com.ffcs.icity">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<context:component-scan base-package="org.xllapp">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+    <bean class="com.ffcs.icity.api.support.ApplicationConfigHolder" lazy-init="false" />
+    
+    <!-- 运行时修改配置页面  -->
+	<bean id="/config" class="com.ffcs.icity.api.core.ApplicationConfigController" />
+
+	<bean id="connectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<constructor-arg index="0">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<constructor-arg index="0" value="${userName}" />
+				<constructor-arg index="1" value="${password}" />
+				<constructor-arg index="2" value="${brokerUrl}" />
+			</bean>
+		</constructor-arg>
+		<property name="createConnectionOnStartup" value="true" />
+		<property name="maxConnections" value="${pool.maxConnections}" />
+		<property name="maximumActiveSessionPerConnection" value="${pool.maximumActiveSessionPerConnection}" />
+	</bean>
+
+	<!-- local development环境 -->
+	<beans profile="development">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath*:/application.properties,
+		                      classpath*:/application.development.properties" />
+	</beans>
+
+	<!-- test 环境 -->
+	<beans profile="test">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath*:/application.properties,
+          			         classpath*:/application.test.properties" />
+	</beans>
+
+	<!-- production环境 -->
+	<beans profile="production">
+		<context:property-placeholder
+			ignore-unresolvable="true" location="classpath*:/application.properties" />
+	</beans>
+
+</beans>

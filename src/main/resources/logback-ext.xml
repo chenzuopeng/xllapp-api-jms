@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+	<!-- 此配置文件存放项目独有的日志配置 -->
+
+	<!-- 关闭activemq的DEBUG等级日志输出 -->
+	<logger name="org.apache.activemq.transport" level="INFO" />
+
+	<!-- 成功消息日志 -->
+	<appender name="SUCCESS_MESSAGE_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/message/success.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 失败消息日志 -->
+	<appender name="FAILED_MESSAGE_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/message/failed.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- BatchUpdateTemplate.batchupdate方法的日志 -->
+	<appender name="BATCHUPDATE_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/message/batchupdate.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="jms.message.success" level="INFO" addtivity="false">
+		<appender-ref ref="SUCCESS_MESSAGE_FILE" />
+	</logger>
+
+	<logger name="jms.message.failed" level="INFO" addtivity="false">
+		<appender-ref ref="FAILED_MESSAGE_FILE" />
+	</logger>
+
+	<logger name="BatchUpdateTemplate.batchupdate" level="INFO"
+		addtivity="false">
+		<appender-ref ref="BATCHUPDATE_FILE" />
+	</logger>
+
+</included>
+
